@@ -39,8 +39,11 @@ export function ClientRootInit({ children }: { children: ReactNode }) {
     }, [message]);
 
     useEffect(() => {
-        void loadPublicSettings();
-    }, [loadPublicSettings]);
+        const refresh = () => void loadPublicSettings().catch(() => {});
+        refresh();
+        window.addEventListener("focus", refresh);
+        return () => window.removeEventListener("focus", refresh);
+    }, [loadPublicSettings, pathname]);
 
     useEffect(() => {
         if (!isLoginPage) void hydrateUser();

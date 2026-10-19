@@ -9,7 +9,7 @@ description: 私有定制仓库的分支与上游维护方式
 
 ## 分支约定
 
-- `main`：合入官方更新的翼境 AI 定制发布分支。
+- `main`：合入官方更新的翼镜 定制发布分支。
 - `comemoe-video-adapter`：保留的定制分支，迁移发布时与 `main` 对齐。
 - `codex/announcement-settings`、`codex/newapi-image-support`：保留迁移前的定制分支。
 - `codex/pre-private-migration`：迁移前的完整定制版本。

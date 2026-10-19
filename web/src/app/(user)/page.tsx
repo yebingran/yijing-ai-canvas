@@ -1,5 +1,7 @@
 "use client";
 
+import { APP_NAME } from "@/constant/env";
+
 import { ArrowRight } from "lucide-react";
 import { type ChangeEvent, useEffect, useRef, useState } from "react";
 import { App, Button, Image, Tag } from "antd";
@@ -133,7 +135,11 @@ export default function IndexPage() {
             <section className="relative mx-auto min-h-[calc(100vh-4rem)] max-w-7xl px-6">
                 <section className="relative flex min-h-[620px] flex-col items-center justify-center py-10 sm:py-14">
                     {visibleBanners.length > 0 && <HomeBannerCarousel banners={visibleBanners} />}
-                    <div className="mt-12 w-full max-w-[820px]">
+                    <div className="mt-10 text-center">
+                        <h1 className="text-5xl font-semibold tracking-[.16em] sm:text-6xl">{APP_NAME}</h1>
+                        <p className="mt-4 text-sm text-stone-500 dark:text-stone-400">让灵感成像</p>
+                    </div>
+                    <div className="mt-8 w-full max-w-[820px]">
                         <CanvasAssistantComposer
                             prompt={prompt}
                             isRunning={false}

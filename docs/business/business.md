@@ -1,6 +1,6 @@
 ---
 title: 服务与合作
-description: 翼境 AI 的赞助服务与合作入口
+description: 翼镜 的赞助服务与合作入口
 ---
 
 # 服务与合作

@@ -33,15 +33,9 @@ const jsonEditorTheme = EditorView.theme({
     "&.cm-focused": { outline: "none" },
 });
 
-const defaultAnnouncementItems = [
-    { text: "TokenDance X 百亿 Token 补贴，一键登录即可接入，SD 2 Mini 低至 0.09元/秒", linkText: "查看详情", linkUrl: "https://tokendance.space/" },
-    { text: "无限画布现已支持 RunningHub X ComfyUI 工作流" },
-    { text: "微信交流群现已开放", linkText: "扫码加入", linkUrl: "https://qr.tdeh.uk/ai" },
-];
-
 const emptySettings: AdminSettings = {
     public: {
-        announcement: { enabled: true, items: defaultAnnouncementItems },
+        announcement: { enabled: true, items: [] },
         homeBanners: { enabled: true, items: [] },
         modelChannel: {
             availableModels: [],
@@ -1204,7 +1198,7 @@ function normalizePublicSetting(setting: Partial<AdminSettings["public"]> = {}):
         ...emptySettings.public,
         announcement: {
             enabled: setting.announcement?.enabled !== false,
-            items: (setting.announcement?.items ?? defaultAnnouncementItems).map((item) => ({ ...item, enabled: item.enabled !== false })),
+            items: (setting.announcement?.items ?? []).map((item) => ({ ...item, enabled: item.enabled !== false })),
         },
         homeBanners: {
             enabled: setting.homeBanners?.enabled !== false,

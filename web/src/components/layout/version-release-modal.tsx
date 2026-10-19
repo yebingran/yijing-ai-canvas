@@ -3,7 +3,7 @@
 import type { CSSProperties } from "react";
 import { Modal, Tag, Timeline } from "antd";
 import { useVersionCheck } from "@/hooks/use-version-check";
-import { APP_VERSION } from "@/constant/env";
+import { APP_NAME, APP_VERSION } from "@/constant/env";
 
 function getTagColor(type: string) {
     if (type === "新增") return "green";
@@ -51,7 +51,7 @@ export function VersionReleaseModal({ className, style }: VersionReleaseModalPro
             </button>
             <Modal title="版本更新" open={open} width={680} centered footer={null} onCancel={() => setOpen(false)}>
                 <div className="mb-5 space-y-2 text-sm">
-                    <div>翼境 AI · 无限画布 · {APP_VERSION}</div>
+                    <div>{APP_NAME} · {APP_VERSION}</div>
                     <div>当前镜像的更新记录；仓库版本请在 <a href="https://github.com/yebingran/yijing-ai-canvas" target="_blank" rel="noreferrer" className="underline">私有仓库</a> 中查看。</div>
                     <div>基于 <a href="https://github.com/tigerowo/infinite-canvas" target="_blank" rel="noreferrer" className="underline">TigerOWO / Infinite Canvas</a>，保留原项目标识与开源协议。</div>
                 </div>

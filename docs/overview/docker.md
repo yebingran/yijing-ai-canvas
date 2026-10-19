@@ -1,6 +1,6 @@
 ---
 title: Docker 与 1Panel 部署
-description: 使用私有 GHCR 镜像部署翼境 AI
+description: 使用私有 GHCR 镜像部署翼镜
 ---
 
 # Docker 与 1Panel 部署
@@ -17,7 +17,7 @@ description: 使用私有 GHCR 镜像部署翼境 AI
 docker login ghcr.io -u yebingran
 ```
 
-在密码提示处输入 Token。1Panel 中添加容器镜像仓库：地址 `ghcr.io`，用户名 `yebingran`，密码填 Token。编排内将原镜像替换为 `ghcr.io/yebingran/yijing-ai-canvas:v0.8.2`，拉取后重新创建容器。
+在密码提示处输入 Token。1Panel 中添加容器镜像仓库：地址 `ghcr.io`，用户名 `yebingran`，密码填 Token。编排内将原镜像替换为 `ghcr.io/yebingran/yijing-ai-canvas:v0.8.3`，拉取后重新创建容器。
 
 ## Compose 启动
 
@@ -56,3 +56,7 @@ DATABASE_DSN=/app/data/infinite-canvas.db
 ```
 
 对象存储等配置沿用原部署。静态资源路径的生产部署验证仍列为待办；本版本构建成功不等同于已完成服务器环境的全部验证。
+
+## 页面缓存
+
+页面 HTML 使用动态响应，公开配置接口使用 `no-store`。EdgeOne 与 1Panel/OpenResty 不应强制缓存 HTML、RSC 页面请求或 `/api/settings`；`/_next/static/` 可继续按内容哈希缓存。升级后清理一次历史页面缓存，并确认前端版本显示 `v0.8.3`。若仍显示 `v0.8.1` 或旧仓库链接，说明访问到的仍是旧页面或旧前端服务，需要核对反向代理目标与容器镜像。

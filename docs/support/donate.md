@@ -1,6 +1,6 @@
 ---
 title: 赞助支持
-description: 翼境 AI 项目的赞助入口
+description: 翼镜 项目的赞助入口
 ---
 
 # 赞助支持

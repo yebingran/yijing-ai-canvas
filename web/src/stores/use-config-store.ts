@@ -384,9 +384,11 @@ function isAiConfigReady(config: AiConfig, model: string) {
     return Boolean(model.trim()) && (config.channelMode === "remote" || Boolean(channel?.baseUrl.trim() && channel?.apiKey.trim()));
 }
 
+let publicSettingsRequest = 0;
+
 export const useConfigStore = create<ConfigStore>()(
     persist(
-        (set, get) => ({
+        (set) => ({
             config: defaultConfig,
             publicSettings: null,
             isPublicSettingsLoading: false,
@@ -400,12 +402,13 @@ export const useConfigStore = create<ConfigStore>()(
                     },
                 })),
             loadPublicSettings: async () => {
-                if (get().isPublicSettingsLoading) return;
+                const request = ++publicSettingsRequest;
                 set({ isPublicSettingsLoading: true });
                 try {
-                    set({ publicSettings: await apiGet<AdminPublicSettings>("/api/settings") });
+                    const publicSettings = await apiGet<AdminPublicSettings>("/api/settings", { _: Date.now() });
+                    if (request === publicSettingsRequest) set({ publicSettings });
                 } finally {
-                    set({ isPublicSettingsLoading: false });
+                    if (request === publicSettingsRequest) set({ isPublicSettingsLoading: false });
                 }
             },
             isAiConfigReady: (config, model) => isAiConfigReady(config, model),

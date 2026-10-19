@@ -1,6 +1,6 @@
 ---
 title: 快速开始
-description: 启动翼境 AI · 无限画布
+description: 启动翼镜
 ---
 
 # 快速开始

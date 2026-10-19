@@ -1,5 +1,7 @@
 "use client";
 
+import { APP_NAME } from "@/constant/env";
+
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { App, Button, Form, Input, Segmented, Space } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -94,10 +96,10 @@ function LoginContent() {
                             mask: "url(/logo.svg) center / contain no-repeat",
                             WebkitMask: "url(/logo.svg) center / contain no-repeat",
                         }}
-                        aria-label="无限画布"
+                        aria-label={APP_NAME}
                     />
-                    <h1 className="text-3xl font-semibold tracking-normal text-stone-950 dark:text-stone-100">账号登录</h1>
-                    <p className="mt-3 text-base leading-7 text-stone-500 dark:text-stone-400">支持账号密码和 Linux.do 登录。</p>
+                    <h1 className="text-3xl font-semibold tracking-normal text-stone-950 dark:text-stone-100">{APP_NAME}</h1>
+                    <p className="mt-3 text-base leading-7 text-stone-500 dark:text-stone-400">{mode === "register" ? "注册账号，开启创作。" : "登录账号，继续创作。"}</p>
                 </div>
 
                 <Form<LoginFormValues> layout="vertical" size="large" requiredMark={false} onFinish={submit}>

@@ -250,13 +250,6 @@ func normalizeAnnouncementSetting(setting model.AnnouncementSetting) model.Annou
 		enabled := true
 		setting.Enabled = &enabled
 	}
-	if setting.Items == nil {
-		setting.Items = []model.AnnouncementItem{
-			{Text: "TokenDance X 百亿 Token 补贴，一键登录即可接入，SD 2 Mini 低至 0.09元/秒", LinkText: "查看详情", LinkURL: "https://tokendance.space/"},
-			{Text: "无限画布现已支持 RunningHub X ComfyUI 工作流"},
-			{Text: "微信交流群现已开放", LinkText: "扫码加入", LinkURL: "https://qr.tdeh.uk/ai"},
-		}
-	}
 	items := make([]model.AnnouncementItem, 0, len(setting.Items))
 	for _, item := range setting.Items {
 		item.Text = strings.TrimSpace(item.Text)
@@ -282,15 +275,6 @@ func normalizeHomeBannerSetting(setting model.HomeBannerSetting) model.HomeBanne
 	if setting.Enabled == nil {
 		enabled := true
 		setting.Enabled = &enabled
-	}
-	if setting.Items == nil {
-		setting.Items = []model.HomeBannerItem{
-			{ImageURL: "https://gcore.jsdelivr.net/gh/tigerowo/cdn-tdeh@v0.6/img/infinite-canvas/metaso.webp", LinkURL: "https://metaso.cn/minimax-h3/?s=tt", Alt: "1"},
-			{ImageURL: "https://gcore.jsdelivr.net/gh/tigerowo/cdn-tdeh@v0.5/img/infinite-canvas/3ddirectortl.webp", Alt: "2"},
-			{ImageURL: "https://gcore.jsdelivr.net/gh/tigerowo/cdn-tdeh@v0.4/img/infinite-canvas/agent.webp", VideoURL: "https://gcore.jsdelivr.net/gh/tigerowo/cdn-tdeh@v0.4/img/infinite-canvas/agent.webm", Alt: "3"},
-			{ImageURL: "https://gcore.jsdelivr.net/gh/tigerowo/cdn-tdeh@v0.4/img/infinite-canvas/panorama.webp", Alt: "4"},
-			{ImageURL: "https://gcore.jsdelivr.net/gh/tigerowo/cdn-tdeh@v0.4/img/infinite-canvas/3ddirector.webp", Alt: "5"},
-		}
 	}
 	items := make([]model.HomeBannerItem, 0, len(setting.Items))
 	for _, item := range setting.Items {

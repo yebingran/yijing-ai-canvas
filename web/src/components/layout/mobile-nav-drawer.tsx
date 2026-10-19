@@ -1,5 +1,7 @@
 "use client";
 
+import { APP_NAME } from "@/constant/env";
+
 import { Drawer } from "antd";
 import Link from "next/link";
 
@@ -14,7 +16,7 @@ type MobileNavDrawerProps = {
 
 export function MobileNavDrawer({ open, activeToolSlug, onClose }: MobileNavDrawerProps) {
     return (
-        <Drawer title="导航" placement="left" size={280} open={open} onClose={onClose} className="md:hidden">
+        <Drawer title={APP_NAME} placement="left" size={280} open={open} onClose={onClose} className="md:hidden">
             <div className="space-y-1">
                 {navigationTools.map((tool) => {
                     const Icon = tool.icon;

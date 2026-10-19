@@ -2,7 +2,7 @@
   <img src="web/public/logo.svg" width="96" alt="Infinite Canvas logo">
 </p>
 
-<h1 align="center">翼境 AI · 无限画布</h1>
+<h1 align="center">翼镜</h1>
 
 让灵感在画布上成境。面向图片、视频与音频创作的 AI 工作台，在一张无限画布中组织脚本、参考图、模型调用和生成结果。
 
@@ -44,7 +44,7 @@ docker compose up -d
 
 本项目基于 [basketikun(纯前端)](https://github.com/basketikun/infinite-canvas) 为底，合并 [HuFakai](https://github.com/HuFakai/infinite-canvas) 生图增强版基础上，针对视频和视频生成逻辑配置更加完善，完善后端云同步机制，不再依赖纯前端。
 
-翼境 AI 定制版继续基于 [TigerOWO / Infinite Canvas](https://github.com/tigerowo/infinite-canvas) 迭代，保留原作者信息、前端页面标识和 Git 历史。感谢所有原作者与贡献者。
+翼镜 定制版继续基于 [TigerOWO / Infinite Canvas](https://github.com/tigerowo/infinite-canvas) 迭代，保留原作者信息、前端页面标识和 Git 历史。感谢所有原作者与贡献者。
 
 > [!CAUTION]
 > 项目目前处于开发阶段，不保证历史数据兼容。各种数据库结构和存储格式都可能直接调整，欢迎关注后续更新。

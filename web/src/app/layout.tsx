@@ -5,10 +5,13 @@ import { AppProviders } from "@/components/layout/app-providers";
 import "antd/dist/reset.css";
 import "./globals.css";
 import React from "react";
+import { APP_NAME } from "@/constant/env";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-    title: "翼境 AI · 无限画布",
-    description: "在无限画布中组织灵感、参考素材与 AI 图片、视频创作",
+    title: APP_NAME,
+    description: "翼镜，让灵感成像。在画布中连接图片、视频与声音。",
 };
 
 export default function RootLayout({

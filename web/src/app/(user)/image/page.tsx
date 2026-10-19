@@ -1,5 +1,7 @@
 "use client";
 
+import { APP_NAME } from "@/constant/env";
+
 import {
     AlertCircle,
     BookOpen,
@@ -1611,6 +1613,7 @@ function WorkbenchHeader({ currentLayout, onLayoutChange, compact = false }: { c
     return (
         <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
+                <p className="mb-1 text-xs font-medium tracking-wider text-stone-500 dark:text-stone-400">{APP_NAME}</p>
                 <h1 className={`${compact ? "text-base" : "text-2xl"} font-semibold text-stone-950 dark:text-stone-100`}>生图工作台</h1>
             </div>
             <div className="flex shrink-0 rounded-lg border border-stone-200 bg-stone-50 p-1 dark:border-stone-800 dark:bg-stone-900">

@@ -1,5 +1,7 @@
 "use client";
 
+import { APP_NAME } from "@/constant/env";
+
 import { GithubOutlined } from "@ant-design/icons";
 
 import { cn } from "@/lib/utils";
@@ -18,7 +20,7 @@ export function GitHubLink({ className, style }: GitHubLinkProps) {
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub"
-            title="翼境 AI 私有仓库"
+            title={`${APP_NAME} 私有仓库`}
         >
             <GithubOutlined className="text-base" />
         </a>
