@@ -1,37 +1,46 @@
 ---
-title: Docker 部署
-description: 使用 Docker Compose 部署无限画布
+title: Docker 与 1Panel 部署
+description: 使用私有 GHCR 镜像部署翼境 AI
 ---
 
-# Docker 部署
+# Docker 与 1Panel 部署
 
-如果你希望在自己的机器或服务器上运行项目，可以直接使用 Docker Compose。
+私有镜像：`ghcr.io/yebingran/yijing-ai-canvas`。支持 Linux amd64、arm64。建议部署具体版本标签；`latest` 用于跟随主分支最新构建。
 
-## 使用发布镜像
+## 私有仓库认证
+
+在 GitHub 账号中创建具有 `read:packages` 权限的 personal access token（classic）。持有者须有私有镜像读取权限。Token 仅在服务器或 1Panel 仓库凭据中填写，不要写入源码、Compose、截图或聊天。
+
+终端使用：
 
 ```bash
-git clone git@github.com:tigerowo/infinite-canvas.git
-cd infinite-canvas
+docker login ghcr.io -u yebingran
+```
+
+在密码提示处输入 Token。1Panel 中添加容器镜像仓库：地址 `ghcr.io`，用户名 `yebingran`，密码填 Token。编排内将原镜像替换为 `ghcr.io/yebingran/yijing-ai-canvas:v0.8.2`，拉取后重新创建容器。
+
+## Compose 启动
+
+```bash
+git clone git@github.com:yebingran/yijing-ai-canvas.git
+cd yijing-ai-canvas
 cp .env.example .env
+# 修改管理员密码和其他环境变量
 docker compose up -d
 ```
 
-启动后访问：
+访问 `http://localhost:3000`。默认管理员用户名 `admin`，密码由 `.env` 中的 `ADMIN_PASSWORD` 设置。
 
-```text
-http://localhost:3000
+更新镜像：
+
+```bash
+docker compose pull
+docker compose up -d
 ```
 
-默认管理员账号：
+迁换镜像时，保留原环境变量、端口和数据挂载，不要创建空的数据目录代替原目录。更新前备份数据库和素材。
 
-```text
-用户名：admin
-密码：.env 中的 ADMIN_PASSWORD
-```
-
-## 本地构建镜像
-
-如果需要基于当前源码构建镜像：
+## 本地构建
 
 ```bash
 cp .env.example .env
@@ -40,10 +49,10 @@ docker compose -f docker-compose.local.yml up -d --build
 
 ## 数据目录
 
-`docker-compose.yml` 会把本地 `./data` 挂载到容器内 `/app/data`，用于保存 SQLite 数据库、提示词数据和上传素材。
-
-Docker 部署时建议把 `.env` 中的 SQLite 路径设置为：
+`docker-compose.yml` 把 `./data` 挂载到容器内 `/app/data`，保存 SQLite 数据库、提示词数据和上传素材。SQLite 配置示例：
 
 ```text
 DATABASE_DSN=/app/data/infinite-canvas.db
 ```
+
+对象存储等配置沿用原部署。静态资源路径的生产部署验证仍列为待办；本版本构建成功不等同于已完成服务器环境的全部验证。

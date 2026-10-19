@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   publish:
+    if: github.repository == 'tigerowo/infinite-canvas'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6

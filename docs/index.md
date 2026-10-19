@@ -1,4 +1,4 @@
-# 无限画布文档索引
+# 翼境 AI · 无限画布文档索引
 
 ## 项目介绍
 
@@ -15,6 +15,7 @@
 ## 开发文档
 
 - [本地开发](backend/local-development.md)
+- [官方更新合并](backend/upstream-updates.md)
 - [接口响应约定](backend/api-response.md)
 - [系统配置数据结构](backend/system-settings.md)
 - [后端数据库说明](backend/backend-database.md)
@@ -23,11 +24,11 @@
 ## 商务合作
 
 - [开源协议](business/license.md)
-- [商务合作](business/business.md)
+- [服务与合作](business/business.md)
 
 ## 赞助支持
 
-- [打赏支持](support/donate.md)
+- [赞助支持](support/donate.md)
 
 ## 项目进度
 

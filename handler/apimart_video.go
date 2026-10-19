@@ -1980,7 +1980,7 @@ func readAPIMartCreateTask(payload []byte) (string, string, bool) {
 
 func normalizeAPIMartTaskStatus(status string) string {
 	switch strings.ToLower(strings.TrimSpace(status)) {
-	case "submitted", "pending", "processing", "running", "queued":
+	case "submitted", "pending", "processing", "running", "queued", "unknown":
 		return "processing"
 	case "completed", "success", "succeeded":
 		return "completed"

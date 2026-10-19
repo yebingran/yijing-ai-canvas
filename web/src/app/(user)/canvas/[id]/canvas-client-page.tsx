@@ -38,6 +38,7 @@ import { isGlmTtsModel } from "@/lib/audio-generation";
 import { isGrok2APITtsConfig } from "@/lib/grok-tts";
 import { isGeminiConfig, isGeminiTtsModel } from "@/lib/gemini";
 import { isKIESeedreamLayerDecompositionModel } from "@/lib/kie-models";
+import { IMAGE_MASK_EDIT_PROMPT_PREFIX } from "@/lib/image-reference-prompt";
 import { NODE_DEFAULT_SIZE, getNodeSpec } from "../constants";
 import { ActiveConnectionPath, ConnectionPath } from "../components/canvas-connections";
 import { CanvasConfigComposer } from "../components/canvas-config-composer";
@@ -2668,7 +2669,7 @@ function InfiniteCanvasPage({ projectId }: { projectId: string }) {
                 return;
             }
             const userPrompt = payload.prompt.trim();
-            const prompt = `参考图中蓝色高亮覆盖区域是需要修改的位置，蓝色只是编辑标记，不要保留在最终图像中。只修改蓝色高亮区域，其他区域的构图、人物、文字、光影和风格保持不变。修改要求：${userPrompt}`;
+            const prompt = `${IMAGE_MASK_EDIT_PROMPT_PREFIX}${userPrompt}`;
             const childId = nanoid();
             const clientTaskId = `client_image_task_${nanoid()}`;
             const markedReference = { id: `${node.id}-marked`, name: `image-${node.id}-marked.png`, type: "image/png", dataUrl: payload.markedDataUrl };
@@ -5930,7 +5931,7 @@ async function submitCanvasWorkflowTask(ref: WorkflowRef, config: AiConfig, mode
     if (!token) throw new Error("工作流生成需要先登录");
     const [referenceImages, referenceVideos, referenceAudios] = await Promise.all([
         Promise.all(images.map((image) => workflowMediaSource(image.dataUrl))),
-        Promise.all(videos.map((video) => workflowMediaSource(video.url))),
+        Promise.all(videos.map((video) => workflowMediaSource(video.url, ref))),
         Promise.all(audios.map((audio) => workflowMediaSource(audio.url))),
     ]);
     if (useUserStore.getState().token !== token) throw new Error("登录状态已变化");

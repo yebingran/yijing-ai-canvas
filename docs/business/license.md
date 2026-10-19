@@ -5,7 +5,9 @@ description: 无限画布开源协议和使用边界说明
 
 # 开源协议
 
-无限画布采用 GNU Affero General Public License v3.0（AGPL-3.0-only）开源协议。你可以在遵守协议要求的前提下使用、复制、修改、分发和商业运营本项目；修改后通过网络向用户提供服务时，必须按协议向这些用户提供当前运行版本的对应源代码。
+翼境 AI 是 Infinite Canvas 的定制版，保留 basketikun、HuFakai、TigerOWO 等原作者及贡献者署名、前端页面标识和原始 Git 历史。
+
+本项目采用 GNU Affero General Public License v3.0（AGPL-3.0-only）开源协议。你可以在遵守协议要求的前提下使用、复制、修改、分发和商业运营本项目；修改后通过网络向用户提供服务时，必须按协议向这些用户提供当前运行版本的对应源代码。
 
 ## 项目初衷
 

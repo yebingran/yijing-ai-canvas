@@ -2,7 +2,7 @@ name: Docker image
 
 on:
   push:
-    branches: ["comemoe-video-adapter"]
+    branches: ["main", "comemoe-video-adapter"]
     tags: ["v*"]
   workflow_dispatch:
 
@@ -28,6 +28,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=tag
             type=sha,prefix=
+            type=raw,value=latest,enable={{is_default_branch}}
 
   build:
     needs: meta

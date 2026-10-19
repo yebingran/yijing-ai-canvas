@@ -7,8 +7,8 @@ import "./globals.css";
 import React from "react";
 
 export const metadata: Metadata = {
-    title: "无限画布",
-    description: "一个无限画布创作工具",
+    title: "翼境 AI · 无限画布",
+    description: "在无限画布中组织灵感、参考素材与 AI 图片、视频创作",
 };
 
 export default function RootLayout({
