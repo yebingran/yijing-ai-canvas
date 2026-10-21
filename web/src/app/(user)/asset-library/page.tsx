@@ -3,7 +3,8 @@
 import { Copy, FolderPlus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { App, Button, Card, Drawer, Empty, Image, Input, Pagination, Spin, Tag, Typography } from "antd";
+import { App, Button, Card, Drawer, Empty, Input, Pagination, Spin, Tag, Typography } from "antd";
+import { AssetMedia } from "@/components/assets/asset-media";
 import { useCopyText } from "@/hooks/use-copy-text";
 import { getProxyUrl } from "@/services/image-storage";
 import { cn } from "@/lib/utils";
@@ -221,11 +222,7 @@ export default function AssetLibraryPage() {
             <Drawer title="素材详情" open={Boolean(selectedAsset)} size="large" onClose={() => setSelectedAsset(null)}>
                 {selectedAsset ? (
                     <div className="space-y-5">
-                        {selectedAsset.coverUrl ? (
-                            <Image src={selectedAsset.coverUrl} alt={selectedAsset.title} className="rounded-lg" />
-                        ) : (
-                            <div className="rounded-lg border border-stone-200 bg-stone-50 p-5 text-sm leading-6 text-stone-600 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-300">{selectedAsset.content || "暂无封面"}</div>
-                        )}
+                        {selectedAsset.type !== "text" || selectedAsset.coverUrl ? <AssetMedia {...selectedAsset} /> : null}
                         <div>
                             <Typography.Title level={4} className="!mb-2">
                                 {selectedAsset.title}
@@ -251,7 +248,7 @@ export default function AssetLibraryPage() {
                                 </Button>
                             ) : null}
                             {selectedAsset.type !== "text" ? (
-                                <Button type="primary" icon={<Copy className="size-4" />} onClick={() => copyText(selectedAsset.url)}>
+                                <Button type="primary" icon={<Copy className="size-4" />} onClick={() => copyText(new URL(selectedAsset.url, window.location.origin).href)}>
                                     复制链接
                                 </Button>
                             ) : null}
@@ -267,7 +264,6 @@ export default function AssetLibraryPage() {
 }
 
 function LibraryCard({ asset, onOpen, onAdd }: { asset: AssetLibraryItem; onOpen: () => void; onAdd: () => void }) {
-    const cover = asset.coverUrl;
     return (
         <Card
             hoverable
@@ -275,11 +271,7 @@ function LibraryCard({ asset, onOpen, onAdd }: { asset: AssetLibraryItem; onOpen
             styles={{ body: { padding: 0 } }}
             cover={
                 <button type="button" className="block w-full text-left" onClick={onOpen}>
-                    {cover ? (
-                        <img src={cover} alt={asset.title} className="aspect-[4/3] w-full object-cover" />
-                    ) : (
-                        <div className="flex aspect-[4/3] items-center justify-center bg-stone-100 p-5 text-center text-sm leading-6 text-stone-600 dark:bg-stone-900 dark:text-stone-300">{asset.content || "暂无封面"}</div>
-                    )}
+                    <div className="aspect-[4/3] overflow-hidden bg-stone-100 dark:bg-stone-900"><AssetMedia {...asset} compact /></div>
                 </button>
             }
         >

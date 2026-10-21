@@ -4,7 +4,10 @@ import { APP_NAME } from "@/constant/env";
 
 import { ArrowRight } from "lucide-react";
 import { type ChangeEvent, useEffect, useRef, useState } from "react";
-import { App, Button, Image, Tag } from "antd";
+import { App, Button, Image, Modal, Tag } from "antd";
+import { useQuery } from "@tanstack/react-query";
+import { AssetMedia } from "@/components/assets/asset-media";
+import { fetchAssetLibrary, type AssetLibraryItem } from "@/services/api/assets";
 import { nanoid } from "nanoid";
 import { useRouter } from "next/navigation";
 
@@ -52,6 +55,8 @@ export default function IndexPage() {
     const createProject = useCanvasStore((state) => state.createProject);
     const hydrated = useCanvasStore((state) => state.hydrated);
     const [promptShowcase, setPromptShowcase] = useState<Prompt[]>([]);
+    const [selectedAsset, setSelectedAsset] = useState<AssetLibraryItem | null>(null);
+    const assetShowcase = useQuery({ queryKey: ["asset-library", "featured"], queryFn: () => fetchAssetLibrary({ featured: 1, pageSize: 12 }), retry: false });
     const [previewIndex, setPreviewIndex] = useState(0);
     const [previewOpen, setPreviewOpen] = useState(false);
     const [prompt, setPrompt] = useState("");
@@ -75,6 +80,10 @@ export default function IndexPage() {
             .then((data) => setPromptShowcase(data.items))
             .catch((error) => message.error(error instanceof Error ? error.message : "获取提示词失败"));
     }, [message]);
+
+    useEffect(() => {
+        if (assetShowcase.isError) message.error(assetShowcase.error instanceof Error ? assetShowcase.error.message : "获取精选素材失败");
+    }, [message, assetShowcase.error, assetShowcase.isError]);
 
     const addPendingAsset = (payload: InsertAssetPayload) => {
         const asset = toPendingAgentAsset(payload, canvasResourceLabel(payload.kind, pendingAssetCountsRef.current[payload.kind]++));
@@ -205,7 +214,39 @@ export default function IndexPage() {
                         ))}
                     </div>
                 </section>
+                {assetShowcase.data?.items.length ? <section className="relative mx-auto mb-20 max-w-6xl border-t border-stone-200 pt-12 dark:border-stone-800">
+                    <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+                        <div>
+                            <p className="mb-3 text-xs tracking-[.2em] text-stone-500 dark:text-stone-400">翼镜 · 精选素材</p>
+                            <h2 className="text-3xl font-semibold">让好作品，成为新的灵感</h2>
+                            <p className="mt-3 text-sm leading-7 text-stone-500 dark:text-stone-400">探索精选影像与创意素材，带入画布，开启你的下一次创作。</p>
+                        </div>
+                        <Button type="link" href="/asset-library" icon={<ArrowRight className="size-4" />} iconPlacement="end">浏览素材库</Button>
+                    </div>
+                    <div className="grid auto-rows-[240px] gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        {assetShowcase.data.items.map((asset, index) => <button type="button" key={asset.id} onClick={() => setSelectedAsset(asset)} className={cn("group relative cursor-pointer overflow-hidden rounded-xl bg-stone-100 text-left dark:bg-stone-900", index === 0 && "sm:col-span-2 sm:row-span-2")}>
+                            <AssetMedia {...asset} compact />
+                            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-5 pb-5 pt-16 text-white">
+                                <span className="text-[11px] text-white/75">{{ image: "图片", video: "视频", audio: "音频", text: "文本" }[asset.type]}{asset.category ? ` / ${asset.category}` : ""}</span>
+                                <h3 className="mt-2 line-clamp-1 text-base font-medium">{asset.title}</h3>
+                                {asset.description ? <p className="mt-1 line-clamp-2 text-xs leading-5 text-white/75">{asset.description}</p> : null}
+                            </div>
+                        </button>)}
+                    </div>
+                </section> : null}
             </section>
+            <Modal title={selectedAsset?.title} open={Boolean(selectedAsset)} width={900} destroyOnHidden onCancel={() => setSelectedAsset(null)} footer={<Button type="primary" onClick={() => {
+                if (!selectedAsset) return;
+                const common = { title: selectedAsset.title, assetId: selectedAsset.id, source: "library" as const };
+                if (selectedAsset.type === "text") addPendingAsset({ ...common, kind: "text", content: selectedAsset.content });
+                else if (selectedAsset.type === "image") addPendingAsset({ ...common, kind: "image", dataUrl: selectedAsset.url });
+                else addPendingAsset({ ...common, kind: selectedAsset.type, url: selectedAsset.url });
+                setSelectedAsset(null);
+                uploadInputRef.current?.closest("section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                message.success("已加入创作参考，输入创作要求即可开始");
+            }}>用作创作参考</Button>}>
+                {selectedAsset ? <div className="space-y-4"><AssetMedia {...selectedAsset} />{selectedAsset.type === "text" ? <p className="whitespace-pre-wrap">{selectedAsset.content}</p> : null}<p className="text-sm">{selectedAsset.description}</p><div>{selectedAsset.tags.map((tag) => <Tag key={tag}>{tag}</Tag>)}</div></div> : null}
+            </Modal>
             <AssetPickerModal
                 open={assetPickerOpen}
                 defaultTab="my-assets"

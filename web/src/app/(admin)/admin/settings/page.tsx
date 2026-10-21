@@ -443,89 +443,49 @@ export default function AdminSettingsPage() {
                                     <Col span={24}>
                                         <Card size="small" title="首页大图轮播广告" className="!mb-5">
                                             <Typography.Paragraph type="secondary">首页搜索框上方的大图轮播。可调整顺序或单独停用；关闭总开关或删除全部图片即可隐藏整组轮播。</Typography.Paragraph>
-                                            <Form.Item name={["public", "homeBanners", "enabled"]} label="显示首页轮播" valuePropName="checked">
+                                            <Form.Item name={["public", "homeBanners", "enabled"]} label="显示首页轮播" className="!mb-3" valuePropName="checked">
                                                 <Switch />
                                             </Form.Item>
                                             <Form.List name={["public", "homeBanners", "items"]}>
-                                                {(fields, { add, remove, move }) => (
-                                                    <Flex vertical gap={12}>
-                                                        {fields.map((field, index) => (
-                                                            <Card key={field.key} size="small" title={`广告 ${index + 1}`} extra={
-                                                                <Space>
-                                                                    <Button size="small" disabled={index === 0} onClick={() => move(index, index - 1)}>上移</Button>
-                                                                    <Button size="small" disabled={index === fields.length - 1} onClick={() => move(index, index + 1)}>下移</Button>
-                                                                    <Button size="small" danger icon={<DeleteOutlined />} onClick={() => remove(field.name)}>删除</Button>
-                                                                </Space>
-                                                            }>
-                                                                <Form.Item name={[field.name, "enabled"]} label="启用这张广告" valuePropName="checked">
-                                                                    <Switch />
-                                                                </Form.Item>
-                                                                <Form.Item name={[field.name, "imageUrl"]} label="封面图片地址">
-                                                                    <Input type="url" placeholder="https://example.com/banner.webp" />
-                                                                </Form.Item>
-                                                                <Row gutter={12}>
-                                                                    <Col xs={24} md={12}>
-                                                                        <Form.Item name={[field.name, "videoUrl"]} label="点击播放视频地址（可选）">
-                                                                            <Input type="url" placeholder="https://example.com/video.mp4" />
-                                                                        </Form.Item>
-                                                                    </Col>
-                                                                    <Col xs={24} md={12}>
-                                                                        <Form.Item name={[field.name, "linkUrl"]} label="点击跳转链接（可选）">
-                                                                            <Input type="url" placeholder="https://example.com" />
-                                                                        </Form.Item>
-                                                                    </Col>
-                                                                </Row>
-                                                                <Form.Item name={[field.name, "alt"]} label="图片说明">
-                                                                    <Input placeholder="描述这张广告" />
-                                                                </Form.Item>
-                                                            </Card>
-                                                        ))}
-                                                        <Button icon={<PlusOutlined />} onClick={() => add({ enabled: true, imageUrl: "", videoUrl: "", linkUrl: "", alt: "" })}>新增广告</Button>
-                                                    </Flex>
-                                                )}
+                                                {(fields, { add, remove, move }) => <Flex vertical gap={10}>
+                                                    <Table rowKey="key" size="small" pagination={false} dataSource={fields} scroll={{ x: 1050, y: 280 }} columns={[
+                                                        { title: "启用", width: 64, render: (_, field) => <Form.Item noStyle name={[field.name, "enabled"]} valuePropName="checked"><Switch size="small" aria-label="启用广告" /></Form.Item> },
+                                                        { title: "封面图片地址", width: 250, render: (_, field) => <Form.Item noStyle name={[field.name, "imageUrl"]}><Input aria-label="封面图片地址" placeholder="粘贴素材访问链接或 OSS 直链" /></Form.Item> },
+                                                        { title: "视频地址（可选）", width: 220, render: (_, field) => <Form.Item noStyle name={[field.name, "videoUrl"]}><Input aria-label="视频地址" placeholder="https://…/video.mp4" /></Form.Item> },
+                                                        { title: "跳转链接（可选）", width: 200, render: (_, field) => <Form.Item noStyle name={[field.name, "linkUrl"]}><Input aria-label="广告跳转链接" placeholder="https://…" /></Form.Item> },
+                                                        { title: "图片说明", width: 160, render: (_, field) => <Form.Item noStyle name={[field.name, "alt"]}><Input aria-label="图片说明" /></Form.Item> },
+                                                        { title: "操作", width: 180, render: (_, field, index) => <Space size={0}>
+                                                            <Button type="link" size="small" disabled={index === 0} onClick={() => move(index, index - 1)}>上移</Button>
+                                                            <Button type="link" size="small" disabled={index === fields.length - 1} onClick={() => move(index, index + 1)}>下移</Button>
+                                                            <Button type="text" size="small" danger aria-label="删除广告" icon={<DeleteOutlined />} onClick={() => remove(field.name)} />
+                                                        </Space> },
+                                                    ]} />
+                                                    <Button icon={<PlusOutlined />} onClick={() => add({ enabled: true, imageUrl: "", videoUrl: "", linkUrl: "", alt: "" })}>新增广告</Button>
+                                                </Flex>}
                                             </Form.List>
                                         </Card>
                                     </Col>
                                     <Col span={24}>
                                         <Card size="small" title="站点滚动公告" className="!mb-5">
                                             <Typography.Paragraph type="secondary">导航栏上方的文字公告。可调整顺序或单独停用；清空所有公告或关闭总开关即可隐藏公告栏。</Typography.Paragraph>
-                                            <Form.Item name={["public", "announcement", "enabled"]} label="显示公告" valuePropName="checked">
+                                            <Form.Item name={["public", "announcement", "enabled"]} label="显示公告" className="!mb-3" valuePropName="checked">
                                                 <Switch />
                                             </Form.Item>
                                             <Form.List name={["public", "announcement", "items"]}>
-                                                {(fields, { add, remove, move }) => (
-                                                    <Flex vertical gap={12}>
-                                                        {fields.map((field, index) => (
-                                                            <Card key={field.key} size="small" title={`公告 ${index + 1}`} extra={
-                                                                <Space>
-                                                                    <Button size="small" disabled={index === 0} onClick={() => move(index, index - 1)}>上移</Button>
-                                                                    <Button size="small" disabled={index === fields.length - 1} onClick={() => move(index, index + 1)}>下移</Button>
-                                                                    <Button size="small" danger icon={<DeleteOutlined />} onClick={() => remove(field.name)}>删除</Button>
-                                                                </Space>
-                                                            }>
-                                                                <Form.Item name={[field.name, "enabled"]} label="启用这条公告" valuePropName="checked">
-                                                                    <Switch />
-                                                                </Form.Item>
-                                                                <Form.Item name={[field.name, "text"]} label="公告文字">
-                                                                    <Input.TextArea rows={2} placeholder="输入前台显示的公告文字" />
-                                                                </Form.Item>
-                                                                <Row gutter={12}>
-                                                                    <Col xs={24} md={16}>
-                                                                        <Form.Item name={[field.name, "linkUrl"]} label="跳转链接（可选）">
-                                                                            <Input type="url" placeholder="https://example.com" />
-                                                                        </Form.Item>
-                                                                    </Col>
-                                                                    <Col xs={24} md={8}>
-                                                                        <Form.Item name={[field.name, "linkText"]} label="链接文字（可选）">
-                                                                            <Input placeholder="查看详情" />
-                                                                        </Form.Item>
-                                                                    </Col>
-                                                                </Row>
-                                                            </Card>
-                                                        ))}
-                                                        <Button icon={<PlusOutlined />} onClick={() => add({ enabled: true, text: "", linkUrl: "", linkText: "" })}>新增公告</Button>
-                                                    </Flex>
-                                                )}
+                                                {(fields, { add, remove, move }) => <Flex vertical gap={10}>
+                                                    <Table rowKey="key" size="small" pagination={false} dataSource={fields} scroll={{ x: 900, y: 240 }} columns={[
+                                                        { title: "启用", width: 64, render: (_, field) => <Form.Item noStyle name={[field.name, "enabled"]} valuePropName="checked"><Switch size="small" aria-label="启用公告" /></Form.Item> },
+                                                        { title: "公告文字", width: 350, render: (_, field) => <Form.Item noStyle name={[field.name, "text"]}><Input aria-label="公告文字" placeholder="输入前台显示的公告文字" /></Form.Item> },
+                                                        { title: "跳转链接（可选）", width: 220, render: (_, field) => <Form.Item noStyle name={[field.name, "linkUrl"]}><Input aria-label="公告跳转链接" placeholder="https://…" /></Form.Item> },
+                                                        { title: "链接文字", width: 140, render: (_, field) => <Form.Item noStyle name={[field.name, "linkText"]}><Input aria-label="链接文字" placeholder="查看详情" /></Form.Item> },
+                                                        { title: "操作", width: 180, render: (_, field, index) => <Space size={0}>
+                                                            <Button type="link" size="small" disabled={index === 0} onClick={() => move(index, index - 1)}>上移</Button>
+                                                            <Button type="link" size="small" disabled={index === fields.length - 1} onClick={() => move(index, index + 1)}>下移</Button>
+                                                            <Button type="text" size="small" danger aria-label="删除公告" icon={<DeleteOutlined />} onClick={() => remove(field.name)} />
+                                                        </Space> },
+                                                    ]} />
+                                                    <Button icon={<PlusOutlined />} onClick={() => add({ enabled: true, text: "", linkUrl: "", linkText: "" })}>新增公告</Button>
+                                                </Flex>}
                                             </Form.List>
                                         </Card>
                                     </Col>

@@ -11,6 +11,25 @@ import (
 	"github.com/tigerowo/infinite-canvas/service"
 )
 
+func AdminStorageObjects(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
+	result, err := service.ListAdminStorageObjects(parseQuery(r))
+	if err != nil {
+		FailError(w, err)
+		return
+	}
+	OK(w, result)
+}
+
+func AdminPublishStorageObject(w http.ResponseWriter, r *http.Request, id string) {
+	result, err := service.PublishStorageObject(id)
+	if err != nil {
+		FailError(w, err)
+		return
+	}
+	OK(w, result)
+}
+
 // StorageConfig 返回公开存储配置。
 func StorageConfig(w http.ResponseWriter, r *http.Request) {
 	config, err := service.PublicStorageConfig()

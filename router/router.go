@@ -160,6 +160,10 @@ func New() *gin.Engine {
 	bridge.POST("/lease", gin.WrapF(handler.BridgeComfyLease))
 	bridge.POST("/result", gin.WrapF(handler.BridgeComfyResult))
 	admin.POST("/storage/measure", gin.WrapF(handler.AdminMeasureStorageProvider))
+	admin.GET("/storage/objects", gin.WrapF(handler.AdminStorageObjects))
+	admin.POST("/storage/objects/:id/publish", func(c *gin.Context) {
+		handler.AdminPublishStorageObject(c.Writer, c.Request, c.Param("id"))
+	})
 	admin.GET("/prompt-categories", gin.WrapF(handler.AdminPromptCategories))
 	admin.POST("/prompt-categories/sync", gin.WrapF(handler.AdminSyncPromptCategories))
 	admin.POST("/prompt-categories/sync-all", gin.WrapF(handler.AdminSyncAllPromptCategories))

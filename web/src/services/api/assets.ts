@@ -10,6 +10,7 @@ export type AssetLibraryItem = {
     description: string;
     content: string;
     url: string;
+    featured: boolean;
     createdAt: string;
     updatedAt: string;
 };
@@ -22,6 +23,7 @@ export type AssetLibraryResponse = {
 };
 
 export type AssetLibraryQuery = {
+    featured?: number;
     keyword?: string;
     type?: string;
     category?: string;

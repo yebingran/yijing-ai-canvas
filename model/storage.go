@@ -17,3 +17,18 @@ type StorageObject struct {
 	CreatedAt  string `json:"createdAt"`
 	DeletedAt  string `json:"deletedAt"`
 }
+
+// AdminStorageObject 不含存储凭据，仅供后台查看同步记录。
+type AdminStorageObject struct {
+	StorageObject
+	Username        string `json:"username" gorm:"->"`
+	UserDisplayName string `json:"userDisplayName" gorm:"->"`
+	AssetID         string `json:"assetId" gorm:"->"`
+	ProviderName    string `json:"providerName" gorm:"-"`
+	URL             string `json:"url" gorm:"-"`
+}
+
+type StorageObjectList struct {
+	Items []AdminStorageObject `json:"items"`
+	Total int64                `json:"total"`
+}

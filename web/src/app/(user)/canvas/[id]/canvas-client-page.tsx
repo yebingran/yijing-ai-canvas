@@ -736,7 +736,7 @@ function InfiniteCanvasPage({ projectId }: { projectId: string }) {
                     .then((task) => {
                         if (controller.signal.aborted) return;
                         if (task.id === node.metadata?.clientTaskId && task.task_id === task.id && !task.created_at && Date.now() - (node.metadata?.startedAt || Date.now()) > 15 * 60 * 1000) {
-                            setNodes((prev) => prev.map((item) => item.id === node.id && item.metadata?.clientTaskId === node.metadata?.clientTaskId && item.metadata.status !== NODE_STATUS_SUCCESS ? { ...item, metadata: { ...item.metadata, status: NODE_STATUS_ERROR, errorDetails: "提交后仍未找到视频任务，请检查 AI 日志并重新生成。" } } : item));
+                            setNodes((prev) => prev.map((item) => item.id === node.id && item.metadata?.clientTaskId === node.metadata?.clientTaskId && item.metadata?.status !== NODE_STATUS_SUCCESS ? { ...item, metadata: { ...item.metadata, status: NODE_STATUS_ERROR, errorDetails: "提交后仍未找到视频任务，请检查 AI 日志并重新生成。" } } : item));
                             return;
                         }
                         rememberNodeTask(node.id, node.metadata?.clientTaskId, task);

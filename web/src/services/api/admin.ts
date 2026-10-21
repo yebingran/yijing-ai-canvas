@@ -119,6 +119,7 @@ export type AdminAsset = {
     description: string;
     content: string;
     url: string;
+    featured: boolean;
     createdAt: string;
     updatedAt: string;
 };
@@ -179,6 +180,30 @@ export async function saveAdminAsset(token: string, asset: Partial<AdminAsset>) 
 
 export async function deleteAdminAsset(token: string, id: string) {
     return apiDelete<boolean>(`/api/admin/assets/${encodeURIComponent(id)}`, token);
+}
+
+export type AdminStorageObject = {
+    id: string;
+    objectKey: string;
+    bucket: string;
+    providerName: string;
+    publicUrl: string;
+    url: string;
+    mimeType: string;
+    bytes: number;
+    createdBy: string;
+    username: string;
+    userDisplayName: string;
+    createdAt: string;
+    assetId: string;
+};
+
+export function fetchAdminStorageObjects(token: string, query: AdminAssetQuery = {}) {
+    return apiGet<{ items: AdminStorageObject[]; total: number }>("/api/admin/storage/objects", compactApiParams(query), token);
+}
+
+export function publishAdminStorageObject(token: string, id: string) {
+    return apiPost<AdminAsset>(`/api/admin/storage/objects/${encodeURIComponent(id)}/publish`, {}, token);
 }
 
 export type AdminModelChannel = {

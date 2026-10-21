@@ -308,6 +308,11 @@ func DeleteStorageObject(ctx context.Context, id string, providerInput *StorageO
 	if user, ok := UserFromContext(ctx); ok && object.CreatedBy != "" && object.CreatedBy != user.ID {
 		return errors.New("无权删除该对象")
 	}
+	if published, err := repository.StorageObjectPublished(id); err != nil {
+		return err
+	} else if published {
+		return safeMessageError{message: "该文件已发布为公共素材，请先从公共素材库移除"}
+	}
 	settings, err := repository.GetSettings()
 	if err != nil {
 		return err

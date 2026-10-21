@@ -159,7 +159,7 @@ S3/R2 与 WebDAV 共用的媒体文件索引表，不保存画布、素材列表
 
 ### assets
 
-素材表。当前用于后台素材库。
+公共素材表。仅管理员手工新增或从系统存储同步记录发布的内容进入此表；首页只展示 `featured = true` 的素材。
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -172,6 +172,8 @@ S3/R2 与 WebDAV 共用的媒体文件索引表，不保存画布、素材列表
 | `description` | string | 描述 |
 | `content` | text | 文本或 Markdown 内容 |
 | `url` | string | 图片、视频等媒体地址 |
+| `featured` | boolean | 是否在前台首页精选素材中展示，默认关闭 |
+| `storage_object_id` | string | 来源存储对象 ID，仅内部使用；公共素材引用期间阻止源文件自动清理 |
 | `created_at` | string | 创建时间 |
 | `updated_at` | string | 更新时间 |
 

@@ -27,10 +27,16 @@ export function useAdminAssets() {
         retry: false,
     });
 
+    const invalidateAssets = () => Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["admin", "assets"] }),
+        queryClient.invalidateQueries({ queryKey: ["admin", "storage-objects"] }),
+        queryClient.invalidateQueries({ queryKey: ["asset-library"] }),
+    ]);
+
     const saveMutation = useMutation({
         mutationFn: (asset: Partial<AdminAsset>) => saveAdminAsset(token, asset),
         onSuccess: async (_, asset) => {
-            await queryClient.invalidateQueries({ queryKey: ["admin", "assets"] });
+            await invalidateAssets();
             message.success(asset.id ? "素材已保存" : "素材已新增");
         },
         onError: (error) => {
@@ -41,7 +47,7 @@ export function useAdminAssets() {
     const deleteMutation = useMutation({
         mutationFn: (id: string) => deleteAdminAsset(token, id),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ["admin", "assets"] });
+            await invalidateAssets();
             message.success("素材已删除");
         },
         onError: (error) => {

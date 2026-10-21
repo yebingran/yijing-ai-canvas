@@ -5,16 +5,20 @@ import (
 
 	"github.com/tigerowo/infinite-canvas/model"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 // ListAssets 按查询条件返回素材分页列表。
-func ListAssets(q model.Query) ([]model.Asset, int64, error) {
+func ListAssets(q model.Query, featured bool) ([]model.Asset, int64, error) {
 	db, err := DB()
 	if err != nil {
 		return nil, 0, err
 	}
 	q.Normalize()
 	tx := applyAssetFilters(db.Model(&model.Asset{}), q)
+	if featured {
+		tx = tx.Where("featured = ?", true)
+	}
 
 	var total int64
 	if err := tx.Count(&total).Error; err != nil {
@@ -60,10 +64,33 @@ func SaveAsset(item model.Asset) (model.Asset, error) {
 	}
 	if saved, ok, err := findAsset(db, item.ID); err != nil {
 		return item, err
-	} else if ok && item.CreatedAt == "" {
+	} else if ok {
 		item.CreatedAt = saved.CreatedAt
+		item.StorageObjectID = saved.StorageObjectID
 	}
 	return item, db.Save(&item).Error
+}
+
+// PublishStorageAsset 使用固定 ID 避免重复发布覆盖管理员已编辑的素材。
+func PublishStorageAsset(item model.Asset) (model.Asset, error) {
+	db, err := DB()
+	if err != nil {
+		return item, err
+	}
+	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&item).Error; err != nil {
+		return item, err
+	}
+	return item, db.First(&item, "id = ?", item.ID).Error
+}
+
+func StorageObjectPublished(id string) (bool, error) {
+	db, err := DB()
+	if err != nil {
+		return false, err
+	}
+	var count int64
+	err = db.Model(&model.Asset{}).Where("storage_object_id = ?", id).Count(&count).Error
+	return count > 0, err
 }
 
 // DeleteAsset 删除指定素材。

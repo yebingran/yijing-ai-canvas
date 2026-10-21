@@ -2,9 +2,11 @@
 
 import { CopyOutlined, DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { ProTable, type ProColumns } from "@ant-design/pro-components";
-import { Button, Card, Col, Flex, Form, Image, Input, Modal, Row, Select, Space, Tag, Tooltip, Typography } from "antd";
+import { Button, Card, Col, Flex, Form, Input, Modal, Row, Select, Space, Switch, Tabs, Tag, Tooltip, Typography } from "antd";
 import { useEffect, useState } from "react";
 
+import { AssetMedia } from "@/components/assets/asset-media";
+import { StorageObjectsTable } from "./components/storage-objects-table";
 import { useCopyText } from "@/hooks/use-copy-text";
 import type { AdminAsset } from "@/services/api/admin";
 import { useAdminAssets } from "./use-admin-assets";
@@ -24,6 +26,7 @@ const editTypeOptions = typeOptions.slice(1);
 export default function AdminAssetsPage() {
     const { assets, tags, keyword, kind, tag, page, pageSize, total, isLoading, searchAssets, changeKind, changeTag, changePage, changePageSize, resetFilters, refreshAssets, saveAsset: saveAdminAsset, deleteAsset } = useAdminAssets();
     const copyText = useCopyText();
+    const [tab, setTab] = useState("public");
     const [form] = Form.useForm<AssetFormValues>();
     const [keywordText, setKeywordText] = useState(keyword);
     const [editingAsset, setEditingAsset] = useState<Partial<AdminAsset> | null>(null);
@@ -42,6 +45,7 @@ export default function AdminAssetsPage() {
             description: "",
             content: "",
             url: "",
+            featured: false,
             ...editingAsset,
             tagText: editingAsset.tags?.join(", ") || "",
         });
@@ -70,7 +74,7 @@ export default function AdminAssetsPage() {
             title: "封面",
             dataIndex: "coverUrl",
             width: 88,
-            render: (_, item) => <Image src={item.coverUrl || item.url || "/logo.svg"} alt={item.title} width={56} height={42} style={{ objectFit: "cover", borderRadius: 6 }} preview={{ mask: "放大" }} fallback="/logo.svg" />,
+            render: (_, item) => <button type="button" aria-label={`预览${item.title}`} className="block h-12 w-16 cursor-pointer overflow-hidden rounded" onClick={() => setDetailAsset(item)}><AssetMedia {...item} compact /></button>,
         },
         {
             title: "标题",
@@ -107,6 +111,18 @@ export default function AdminAssetsPage() {
             render: (_, item) => <Typography.Text type="secondary">{item.category || "未标注"}</Typography.Text>,
         },
         {
+            title: "首页展示",
+            key: "featured",
+            width: 100,
+            render: (_, item) => <Switch size="small" aria-label={`首页展示${item.title}`} checked={item.featured} disabled={isLoading} onChange={(featured) => void saveAdminAsset({ ...item, featured }).catch(() => {})} />,
+        },
+        {
+            title: "链接",
+            key: "url",
+            width: 100,
+            render: (_, item) => item.url ? <Button type="link" size="small" onClick={() => copyText(new URL(item.url, window.location.origin).href)}>复制链接</Button> : "—",
+        },
+        {
             title: "操作",
             key: "actions",
             width: 112,
@@ -128,7 +144,8 @@ export default function AdminAssetsPage() {
 
     return (
         <main style={{ padding: 24 }}>
-            <Flex vertical gap={16}>
+            <Tabs activeKey={tab} onChange={setTab} items={[{ key: "public", label: "公共素材" }, { key: "storage", label: "OSS / 云端同步" }]} />
+            {tab === "storage" ? <StorageObjectsTable onPublished={setEditingAsset} /> : <Flex vertical gap={16}>
                 <Card variant="borderless">
                     <Form layout="vertical">
                         <Row gutter={16} align="bottom">
@@ -175,6 +192,7 @@ export default function AdminAssetsPage() {
                     search={false}
                     defaultSize="middle"
                     tableLayout="fixed"
+                    scroll={{ x: 1250 }}
                     cardProps={{ variant: "borderless" }}
                     headerTitle={
                         <Space>
@@ -198,9 +216,9 @@ export default function AdminAssetsPage() {
                         onChange: (nextPage, nextPageSize) => (nextPageSize !== pageSize ? changePageSize(nextPageSize) : changePage(nextPage)),
                     }}
                 />
-            </Flex>
+            </Flex>}
 
-            <Modal title={editingAsset?.id ? "编辑素材" : "新增素材"} open={Boolean(editingAsset)} width={760} onCancel={() => setEditingAsset(null)} onOk={() => void saveAsset()} okText="保存" cancelText="取消" destroyOnHidden>
+            <Modal title={editingAsset?.id ? "编辑素材" : "新增素材"} open={Boolean(editingAsset)} width={760} onCancel={() => setEditingAsset(null)} onOk={() => void saveAsset().catch(() => {})} okText="保存" cancelText="取消" destroyOnHidden>
                 <Form form={form} layout="vertical" requiredMark={false}>
                     <Form.Item name="type" label="类型" rules={[{ required: true, message: "请选择类型" }]}>
                         <Select options={editTypeOptions} />
@@ -210,6 +228,9 @@ export default function AdminAssetsPage() {
                     </Form.Item>
                     <Form.Item name="coverUrl" label="封面 URL">
                         <Input />
+                    </Form.Item>
+                    <Form.Item name="featured" label="首页展示" valuePropName="checked" extra="开启后出现在前台首页精选素材板块">
+                        <Switch />
                     </Form.Item>
                     <Form.Item name="tagText" label="标签，用逗号分隔">
                         <Input />
@@ -236,7 +257,7 @@ export default function AdminAssetsPage() {
                 {detailAsset ? (
                     <Flex vertical gap={14}>
                         <Flex gap={14} align="start">
-                            <Image src={detailAsset.coverUrl || detailAsset.url || "/logo.svg"} alt={detailAsset.title} width={116} height={84} style={{ objectFit: "cover", borderRadius: 8 }} preview={{ mask: "放大" }} fallback="/logo.svg" />
+
                             <Flex vertical gap={8} style={{ minWidth: 0 }}>
                                 <Typography.Title level={5} style={{ margin: 0 }}>
                                     {detailAsset.title}
@@ -255,6 +276,7 @@ export default function AdminAssetsPage() {
                                 {detailAsset.description}
                             </Typography.Paragraph>
                         ) : null}
+                        {detailAsset.type !== "text" ? <AssetMedia {...detailAsset} /> : null}
                         <Input.TextArea value={detailAsset.type === "text" ? detailAsset.content : detailAsset.url || detailAsset.coverUrl} rows={7} readOnly />
                         <Button icon={<CopyOutlined />} onClick={() => copyText(detailAsset.type === "text" ? detailAsset.content : detailAsset.url || detailAsset.coverUrl)}>
                             复制内容
